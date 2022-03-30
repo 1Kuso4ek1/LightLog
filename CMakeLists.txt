@@ -6,14 +6,14 @@ add_library(LightLog LightLog/src/Log.cpp)
 add_executable(example example.cpp)
 target_include_directories(example
 	PUBLIC 
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/LightLog/include>
+	LightLog/include
 )
 target_link_libraries(example PUBLIC LightLog)
 
 target_include_directories(LightLog
 	PUBLIC
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-	$<INSTALL_INTERFACE:include>
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/LightLog/include>
+	$<INSTALL_INTERFACE:LightLog/include>
 )
 
 install(TARGETS LightLog
@@ -26,6 +26,6 @@ install(FILES LightLog/LightLogConfig.cmake
 )
 
 install(FILES 
-	include/Log.h
-	DESTINATION	LightLog/include/LightLog
+	LightLog/include/Log.h
+	DESTINATION	include
 )

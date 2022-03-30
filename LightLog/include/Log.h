@@ -4,11 +4,10 @@
 #include <chrono>
 #include <ctime>
 #include <sstream>
+#include <memory>
 
 struct Color
 {
-    Color(std::string code) : code(code) {}
-
     std::string code;
 };
 
@@ -28,16 +27,17 @@ public:
         Info
     };
 
-    Log(std::string filename, bool silent);
-    Log();
-
-    void Write(std::string data, Type type);
+    static void Init(std::string filename, bool silent);
+    static void Write(std::string data, Type type);
 
 private:
-    bool silent;
-    std::ofstream output;
+    Log();
 
-    Color normal, red, green,
-          yellow, blue, magenta,
-          cyan, white;
+    static std::string normal, red, green,
+                       yellow, blue, magenta,
+                       cyan, white;
+
+    static std::ofstream output;
+
+    static bool silent;
 };

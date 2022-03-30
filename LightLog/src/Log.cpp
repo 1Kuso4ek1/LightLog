@@ -1,19 +1,23 @@
-#include <LightLog/Log.h>
+#include <Log.h>
 
-Log::Log(std::string filename, bool silent) :
-         output(filename), silent(silent),
-         normal("\x1B[0m"), red("\x1B[31m"),
-         green("\x1B[32m"), yellow("\x1B[33m"),
-         blue("\x1B[34m"), magenta("\x1B[35m"),
-         cyan("\x1B[36m"), white("\x1B[37m") {}
+std::string Log::normal = "\x1B[0m";
+std::string Log::red = "\x1B[31m";
+std::string Log::green = "\x1B[32m";
+std::string Log::yellow = "\x1B[33m";
+std::string Log::blue = "\x1B[34m";
+std::string Log::magenta = "\x1B[35m";
+std::string Log::cyan = "\x1B[36m";
+std::string Log::white = "\x1B[37m";
 
-Log::Log() : output("Last_log.txt"), silent(false),
-             normal("\x1B[0m"), red("\x1B[31m"),
-             green("\x1B[32m"), yellow("\x1B[33m"),
-             blue("\x1B[34m"), magenta("\x1B[35m"),
-             cyan("\x1B[36m"), white("\x1B[37m") {}
+std::ofstream Log::output("");
+bool Log::silent = false;
 
-void Log::Write(std::string data, Type type)
+void Log::Init(std::string filename, bool issilent)
+{
+    Log::output.open(filename); Log::silent = issilent;
+}
+
+void Log::Write(std::string data, Log::Type type)
 {
     auto current_time = std::chrono::system_clock::now();
     std::time_t t = std::chrono::system_clock::to_time_t(current_time);
