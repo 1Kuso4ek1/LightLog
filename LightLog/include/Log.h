@@ -6,16 +6,6 @@
 #include <sstream>
 #include <memory>
 
-struct Color
-{
-    std::string code;
-};
-
-static std::ostream& operator<<(std::ostream& stream, Color c)
-{
-    return (stream << c.code);
-}
-
 class Log
 {
 public:
