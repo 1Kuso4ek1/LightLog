@@ -1,5 +1,4 @@
 #include <Log.h>
-#define _WIN32
 
 #ifndef _WIN32
     std::string Log::normal = "\x1B[0m";
