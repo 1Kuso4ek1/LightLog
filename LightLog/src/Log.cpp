@@ -1,13 +1,25 @@
 #include <Log.h>
+#define _WIN32
 
-std::string Log::normal = "\x1B[0m";
-std::string Log::red = "\x1B[31m";
-std::string Log::green = "\x1B[32m";
-std::string Log::yellow = "\x1B[33m";
-std::string Log::blue = "\x1B[34m";
-std::string Log::magenta = "\x1B[35m";
-std::string Log::cyan = "\x1B[36m";
-std::string Log::white = "\x1B[37m";
+#ifndef _WIN32
+    std::string Log::normal = "\x1B[0m";
+    std::string Log::red = "\x1B[31m";
+    std::string Log::green = "\x1B[32m";
+    std::string Log::yellow = "\x1B[33m";
+    std::string Log::blue = "\x1B[34m";
+    std::string Log::magenta = "\x1B[35m";
+    std::string Log::cyan = "\x1B[36m";
+    std::string Log::white = "\x1B[37m";
+#else
+    std::string Log::normal = "";
+    std::string Log::red = "";
+    std::string Log::green = "";
+    std::string Log::yellow = "";
+    std::string Log::blue = "";
+    std::string Log::magenta = "";
+    std::string Log::cyan = "";
+    std::string Log::white = "";
+#endif
 
 std::ofstream Log::output("");
 bool Log::silent = false;
