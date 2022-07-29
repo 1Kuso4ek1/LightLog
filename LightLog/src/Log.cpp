@@ -1,5 +1,4 @@
 #include <Log.h>
-#define _WIN32
 
 #ifndef _WIN32
     std::string Log::normal = "\x1B[0m";
@@ -59,6 +58,6 @@ void Log::Write(std::string data, Log::Type type)
     if(type == Log::Type::Critical)
     {
         output.close();
-        throw cont.str();
+        throw std::runtime_error(data);
     }
 }
