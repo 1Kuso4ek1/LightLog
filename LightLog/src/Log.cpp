@@ -22,10 +22,11 @@
 
 std::ofstream Log::output("");
 bool Log::silent = false;
+std::vector<std::string> Log::lastErrors = {};
 
-void Log::Init(std::string filename, bool issilent)
+void Log::Init(std::string filename, bool isSilent)
 {
-    Log::output.open(filename); Log::silent = issilent;
+    Log::output.open(filename); Log::silent = isSilent;
 }
 
 void Log::Write(std::string data, Log::Type type)
@@ -40,14 +41,17 @@ void Log::Write(std::string data, Log::Type type)
         cont << white << std::ctime(&t) << normal << '\t' << red << "CRITICAL ERROR: " << data << normal << "\n";
         break;
     case Log::Type::Error:
+        lastErrors.emplace_back("Error: " + data);
         output << std::ctime(&t) << '\t' << "Error: " << data << "\n";
         cont << white << std::ctime(&t) << normal << '\t' << red << "Error: " << data << normal << "\n";
         break;
     case Log::Type::Warning:
+        lastErrors.clear();
         output << std::ctime(&t) << '\t' << "Warning: " << data << "\n";
         cont << white << std::ctime(&t) << normal << '\t' << yellow << "Warning: " << data << normal << "\n";
         break;
     case Log::Type::Info:
+        lastErrors.clear();
         output << std::ctime(&t) << '\t' << "Info: " << data << "\n";
         cont << white << std::ctime(&t) << normal << '\t' << cyan << "Info: " << data << normal << "\n";
         break;
@@ -60,4 +64,9 @@ void Log::Write(std::string data, Log::Type type)
         output.close();
         throw std::runtime_error(data);
     }
+}
+
+std::vector<std::string> Log::GetLastErrors()
+{
+    return lastErrors;
 }

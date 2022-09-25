@@ -5,6 +5,7 @@
 #include <ctime>
 #include <sstream>
 #include <memory>
+#include <vector>
 
 class Log
 {
@@ -20,6 +21,8 @@ public:
     static void Init(std::string filename, bool silent);
     static void Write(std::string data, Type type);
 
+    static std::vector<std::string> GetLastErrors();
+
 private:
     Log();
 
@@ -28,6 +31,8 @@ private:
                        cyan, white;
 
     static std::ofstream output;
+
+    static std::vector<std::string> lastErrors;
 
     static bool silent;
 };
