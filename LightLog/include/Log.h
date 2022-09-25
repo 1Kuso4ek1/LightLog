@@ -18,10 +18,12 @@ public:
         Info
     };
 
-    static void Init(std::string filename, bool silent);
+    static void Init(std::string filename, bool silent, bool storeMessages = false);
     static void Write(std::string data, Type type);
 
-    static std::vector<std::string> GetLastErrors();
+    static void ClearMessagesList();
+
+    static std::vector<std::pair<std::string, Log::Type>> GetMessages();
 
 private:
     Log();
@@ -32,7 +34,7 @@ private:
 
     static std::ofstream output;
 
-    static std::vector<std::string> lastErrors;
+    static std::vector<std::pair<std::string, Log::Type>> messages;
 
     static bool silent;
 };
