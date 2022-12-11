@@ -9,3 +9,4 @@ int main()
     Log::Write("Hello error!", Log::Type::Error);
     Log::Write("Hello critical!", Log::Type::Critical);
 }
+
