@@ -23,9 +23,11 @@
 std::ofstream Log::output("");
 bool Log::silent = false;
 std::vector<std::pair<std::string, Log::Type>> Log::messages = {};
+std::function<void()> Log::segvHandle = std::function<void()>();
 
 void Log::Init(std::string filename, bool isSilent, bool storeMessages)
 {
+	signal(SIGSEGV, SigSegv);
     Log::output.open(filename); Log::silent = isSilent;
 }
 
@@ -66,6 +68,11 @@ void Log::Write(std::string data, Log::Type type)
     }
 }
 
+void Log::SetSigSegvHandle(std::function<void()> handle)
+{
+	segvHandle = handle;
+}
+
 void Log::ClearMessagesList()
 {
     messages.clear();
@@ -74,4 +81,16 @@ void Log::ClearMessagesList()
 std::vector<std::pair<std::string, Log::Type>> Log::GetMessages()
 {
     return messages;
+}
+
+void Log::SigSegv(int sig)
+{
+	auto current_time = std::chrono::system_clock::now();
+	std::time_t t = std::chrono::system_clock::to_time_t(current_time);
+	output << std::ctime(&t) << '\t' << "SIGSEGV received" << "\n";
+	output.close();
+    std::cout << white << std::ctime(&t) << normal << '\t' << red << "SIGSEGV received" << normal << "\n";
+	segvHandle();
+	signal(sig, SIG_DFL);
+	exit(1);
 }
