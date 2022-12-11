@@ -23,7 +23,7 @@
 std::ofstream Log::output("");
 bool Log::silent = false;
 std::vector<std::pair<std::string, Log::Type>> Log::messages = {};
-std::function<void()> Log::segvHandle = std::function<void()>();
+std::function<void()> Log::segvHandle = std::function<void()>([]() {});
 
 void Log::Init(std::string filename, bool isSilent, bool storeMessages)
 {
