@@ -22,7 +22,7 @@ public:
 
     static void Init(std::string filename, bool silent, bool storeMessages = false);
     static void Write(std::string data, Type type);
-    static void SetSigSegvHandle(std::function<void()> handle);
+    static void SetCrashHandle(std::function<void()> handle);
 
     static void ClearMessagesList();
 
@@ -37,7 +37,7 @@ private:
                        yellow, blue, magenta,
                        cyan, white;
 
-	static std::function<void()> segvHandle;
+	static std::function<void()> crashHandle;
 
     static std::ofstream output;
 

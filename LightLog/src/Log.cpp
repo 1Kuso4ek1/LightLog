@@ -23,12 +23,13 @@
 std::ofstream Log::output("");
 bool Log::silent = false;
 std::vector<std::pair<std::string, Log::Type>> Log::messages = {};
-std::function<void()> Log::segvHandle = std::function<void()>([]() {});
+std::function<void()> Log::crashHandle = std::function<void()>([]() {});
 
 void Log::Init(std::string filename, bool isSilent, bool storeMessages)
 {
 	signal(SIGSEGV, SigSegv);
-    Log::output.open(filename); Log::silent = isSilent;
+    Log::output.open(filename);
+    Log::silent = isSilent;
 }
 
 void Log::Write(std::string data, Log::Type type)
@@ -64,13 +65,14 @@ void Log::Write(std::string data, Log::Type type)
     if(type == Log::Type::Critical)
     {
         output.close();
-        throw std::runtime_error(data);
+        crashHandle();
+        exit(EXIT_FAILURE);
     }
 }
 
-void Log::SetSigSegvHandle(std::function<void()> handle)
+void Log::SetCrashHandle(std::function<void()> handle)
 {
-	segvHandle = handle;
+	crashHandle = handle;
 }
 
 void Log::ClearMessagesList()
@@ -90,7 +92,7 @@ void Log::SigSegv(int sig)
 	output << std::ctime(&t) << '\t' << "SIGSEGV received" << "\n";
 	output.close();
     std::cout << white << std::ctime(&t) << normal << '\t' << red << "SIGSEGV received" << normal << "\n";
-	segvHandle();
+	crashHandle();
 	signal(sig, SIG_DFL);
-	exit(1);
+	exit(EXIT_FAILURE);
 }
