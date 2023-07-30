@@ -22,21 +22,23 @@
 
 std::ofstream Log::output("");
 bool Log::silent = false;
-std::vector<std::pair<std::string, Log::Type>> Log::messages = {};
+std::vector<Log::StringLogType> Log::messages = {};
 std::function<void()> Log::crashHandle = std::function<void()>([]() {});
 
-void Log::Init(std::string filename, bool isSilent, bool storeMessages)
+void Log::Init(std::string_view filename, bool isSilent, bool storeMessages)
 {
 	signal(SIGSEGV, SigSegv);
-    Log::output.open(filename);
+    Log::output.open(filename.data());
     Log::silent = isSilent;
 }
 
-void Log::Write(std::string data, Log::Type type)
+void Log::Write(std::string_view data, Log::Type type)
 {
     auto current_time = std::chrono::system_clock::now();
     std::time_t t = std::chrono::system_clock::to_time_t(current_time);
     std::stringstream cont;
+    std::string data_temp{data};
+
     switch(type)
     {
     case Log::Type::Critical:
@@ -44,17 +46,17 @@ void Log::Write(std::string data, Log::Type type)
         cont << white << std::ctime(&t) << normal << '\t' << red << "CRITICAL ERROR: " << data << normal << "\n";
         break;
     case Log::Type::Error:
-        messages.push_back({ "Error: " + data, Log::Type::Error });
+        messages.push_back({ "Error: " + data_temp, Log::Type::Error });
         output << std::ctime(&t) << '\t' << "Error: " << data << "\n";
         cont << white << std::ctime(&t) << normal << '\t' << red << "Error: " << data << normal << "\n";
         break;
     case Log::Type::Warning:
-        messages.push_back({ "Warning: " + data, Log::Type::Warning });
+        messages.push_back({ "Warning: " + data_temp, Log::Type::Warning });
         output << std::ctime(&t) << '\t' << "Warning: " << data << "\n";
         cont << white << std::ctime(&t) << normal << '\t' << yellow << "Warning: " << data << normal << "\n";
         break;
     case Log::Type::Info:
-        messages.push_back({ "Info: " + data, Log::Type::Info });
+        messages.push_back({ "Info: " + data_temp, Log::Type::Info });
         output << std::ctime(&t) << '\t' << "Info: " << data << "\n";
         cont << white << std::ctime(&t) << normal << '\t' << cyan << "Info: " << data << normal << "\n";
         break;
@@ -80,7 +82,7 @@ void Log::ClearMessagesList()
     messages.clear();
 }
 
-std::vector<std::pair<std::string, Log::Type>> Log::GetMessages()
+std::vector<Log::StringLogType> Log::GetMessages()
 {
     return messages;
 }
