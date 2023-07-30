@@ -8,6 +8,7 @@
 #include <vector>
 #include <signal.h>
 #include <functional>
+#include <string_view>
 
 class Log
 {
@@ -20,13 +21,15 @@ public:
         Info
     };
 
-    static void Init(std::string filename, bool silent, bool storeMessages = false);
-    static void Write(std::string data, Type type);
+    static void Init(std::string_view filename, bool silent, bool storeMessages = false);
+    static void Write(std::string_view data, Type type);
     static void SetCrashHandle(std::function<void()> handle);
 
     static void ClearMessagesList();
 
-    static std::vector<std::pair<std::string, Log::Type>> GetMessages();
+    using StringLogType = std::pair<std::string, Log::Type>;
+
+    static std::vector<StringLogType> GetMessages();
 
 private:
     Log();
@@ -41,7 +44,7 @@ private:
 
     static std::ofstream output;
 
-    static std::vector<std::pair<std::string, Log::Type>> messages;
+    static std::vector<StringLogType> messages;
 
     static bool silent;
 };
