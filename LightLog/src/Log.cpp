@@ -25,19 +25,19 @@ bool Log::silent = false;
 std::vector<Log::StringLogType> Log::messages = {};
 std::function<void()> Log::crashHandle = std::function<void()>([]() {});
 
-void Log::Init(std::string_view filename, bool isSilent, bool storeMessages)
+void Log::Init(std::string filename, bool isSilent, bool storeMessages)
 {
-	signal(SIGSEGV, SigSegv);
+    signal(SIGSEGV, SigSegv);
     Log::output.open(filename.data());
     Log::silent = isSilent;
 }
 
-void Log::Write(std::string_view data, Log::Type type)
+void Log::Write(std::string data, Log::Type type)
 {
     auto current_time = std::chrono::system_clock::now();
     std::time_t t = std::chrono::system_clock::to_time_t(current_time);
     std::stringstream cont;
-    std::string data_temp{data};
+    std::string data_temp(data);
 
     switch(type)
     {
@@ -74,7 +74,7 @@ void Log::Write(std::string_view data, Log::Type type)
 
 void Log::SetCrashHandle(std::function<void()> handle)
 {
-	crashHandle = handle;
+    crashHandle = handle;
 }
 
 void Log::ClearMessagesList()
@@ -89,12 +89,12 @@ std::vector<Log::StringLogType> Log::GetMessages()
 
 void Log::SigSegv(int sig)
 {
-	auto current_time = std::chrono::system_clock::now();
-	std::time_t t = std::chrono::system_clock::to_time_t(current_time);
-	output << std::ctime(&t) << '\t' << "SIGSEGV received" << "\n";
-	output.close();
+    auto current_time = std::chrono::system_clock::now();
+    std::time_t t = std::chrono::system_clock::to_time_t(current_time);
+    output << std::ctime(&t) << '\t' << "SIGSEGV received" << "\n";
+    output.close();
     std::cout << white << std::ctime(&t) << normal << '\t' << red << "SIGSEGV received" << normal << "\n";
-	crashHandle();
-	signal(sig, SIG_DFL);
-	exit(EXIT_FAILURE);
+    crashHandle();
+    signal(sig, SIG_DFL);
+    exit(EXIT_FAILURE);
 }

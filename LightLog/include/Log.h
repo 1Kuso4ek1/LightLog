@@ -21,8 +21,8 @@ public:
         Info
     };
 
-    static void Init(std::string_view filename, bool silent, bool storeMessages = false);
-    static void Write(std::string_view data, Type type);
+    static void Init(std::string filename, bool silent, bool storeMessages = false);
+    static void Write(std::string data, Type type);
     static void SetCrashHandle(std::function<void()> handle);
 
     static void ClearMessagesList();
@@ -39,8 +39,8 @@ private:
     static std::string normal, red, green,
                        yellow, blue, magenta,
                        cyan, white;
-
-	static std::function<void()> crashHandle;
+                       
+    static std::function<void()> crashHandle;
 
     static std::ofstream output;
 
